@@ -4,6 +4,7 @@ import torch
 from transformers import (
     AutoConfig, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 )
+from huggingface_hub import snapshot_download
 from flask import Flask, request, jsonify
 
 from flask_cors import CORS
@@ -31,13 +32,12 @@ args = parser.parse_args()
 # cuda devices
 if torch.cuda.is_available():
     if args.gpu_ids is None:
-        device = torch.device("cuda")
         gpu_ids = list(range(torch.cuda.device_count()))
     else:
-        device = torch.device(f"cuda:{args.gpu_ids[0]}")
-        gpu_ids = args.gpu_ids
+        gpu_ids = [int(gpu_id) for gpu_id in args.gpu_ids]
     print(f"Using GPU(s): {gpu_ids}")
-    torch.cuda.set_device(device)
+    device = torch.device("cuda")
+    torch.cuda.set_device(gpu_ids[0])  # Set primary device
 
 else:
     device = torch.device("cpu")
@@ -55,9 +55,9 @@ if args.quantization:
 else:
     quantization_config = None
 
-
 # load model
 pretrained_model_path = args.model_path
+
 config = AutoConfig.from_pretrained(
     pretrained_model_name_or_path=pretrained_model_path
     )
@@ -66,12 +66,15 @@ model = AutoModelForCausalLM.from_pretrained(
     pretrained_model_name_or_path=pretrained_model_path,
     quantization_config=quantization_config,
     device_map='auto',
+    use_safetensors=True,
+    local_files_only=True,
     )
 
 tokenizer = AutoTokenizer.from_pretrained(
     pretrained_model_name_or_path=pretrained_model_path,
+    use_fast=False,
+    local_files_only=True
     )
-
 
 # flask API
 app = Flask(__name__)

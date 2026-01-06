@@ -1,17 +1,9 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
-__MACOSX
-*.py[cod]
-*$py.class
+llm_engine/Mixtral-8x7B-Instruct-v0.1/
+llmsr/__pycache__/
+
+# Python cache
+logs/
 
 # C extensions
 *.so
-
-# Python cache
-*.pyc
-
-# Logs
-./logs
-
-# Model weights
-./llm_engine/Mixtral-8x7B-Instruct-v0.1/*
