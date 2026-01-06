@@ -22,8 +22,6 @@ parser.add_argument('--run_id', type=int, default=1)
 args = parser.parse_args()
 
 
-
-
 if __name__ == '__main__':
     # Load config and parameters
     class_config = config.ClassConfig(llm_class=sampler.LocalLLM, sandbox_class=evaluator.LocalSandbox)
@@ -57,6 +55,5 @@ if __name__ == '__main__':
         config=config,
         max_sample_nums=global_max_sample_num,
         class_config=class_config,
-        # log_dir = 'logs/m1jobs-mixtral-v10',
         log_dir=args.log_path,
     )

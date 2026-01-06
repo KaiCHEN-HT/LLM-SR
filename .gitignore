@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 llm_engine/Mixtral-8x7B-Instruct-v0.1/
+
 llmsr/__pycache__/
 
 # Python cache
@@ -7,3 +8,4 @@ logs/
 
 # C extensions
 *.so
+*.pyc
